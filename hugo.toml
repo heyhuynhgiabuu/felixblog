@@ -52,9 +52,6 @@ pagerSize = 5
   # Or format with time and time zone
   # dateFormat = "02-01-2006 15:04:05 MST"
 
-  # Currently the language selection
-  showLanguageSelector = true
-
   # Allows custom to add to <head>
   # customCSS = ["custom.css"]
   # customJS = ["custom.js"]
