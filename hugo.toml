@@ -6,6 +6,12 @@ theme = "terminal"
 [pagination]
 pagerSize = 5
 
+[markup]
+  [markup.tableOfContents]
+    endLevel = 4
+    ordered = false
+    startLevel = 2
+
 [params]
   # dir name of your main content (default is `content/posts`).
   # the list of set content will show up on your index page (baseurl).
@@ -53,7 +59,7 @@ pagerSize = 5
   # dateFormat = "02-01-2006 15:04:05 MST"
 
   # Allows custom to add to <head>
-  # customCSS = ["custom.css"]
+  customCSS = ["css/custom.css"]
   # customJS = ["custom.js"]
 
   # Allow information from Git to display update time

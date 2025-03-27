@@ -1,0 +1,73 @@
+/* Bố cục hai cột cho TOC và nội dung */
+.two-column-layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+/* Cột TOC */
+.toc-column {
+  display: block;
+}
+
+.toc-container {
+  position: sticky;
+  top: 20px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding-right: 15px;
+  border-right: 1px solid var(--border-color);
+}
+
+/* Tùy chỉnh TOC */
+.toc-container h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.toc-container nav#TableOfContents {
+  font-size: 14px;
+}
+
+.toc-container nav#TableOfContents ul {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+.toc-container nav#TableOfContents > ul {
+  padding-left: 0;
+}
+
+.toc-container nav#TableOfContents a {
+  text-decoration: none;
+  display: block;
+  padding: 3px 0;
+  color: inherit;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.toc-container nav#TableOfContents a:hover {
+  opacity: 1;
+  text-decoration: underline;
+  color: var(--accent);
+}
+
+/* Responsive layout - chuyển sang 1 cột trên thiết bị di động */
+@media screen and (max-width: 768px) {
+  .two-column-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .toc-column {
+    margin-bottom: 30px;
+  }
+
+  .toc-container {
+    position: relative;
+    max-height: none;
+    top: 0;
+  }
+}
