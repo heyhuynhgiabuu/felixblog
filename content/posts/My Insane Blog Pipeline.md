@@ -41,7 +41,6 @@ hugo new site websitename
 cd websitename
 ```
 
-Copy
 
 ### Download a Hugo Theme[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#download-a-hugo-theme)
 
@@ -65,7 +64,6 @@ git config --global user.email "your.email@example.com"
 git submodule add -f https://github.com/panr/hugo-theme-terminal.git themes/terminal
 ```
 
-Copy
 
 ### Adjust Hugo settings[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#adjust-hugo-settings)
 
@@ -164,7 +162,6 @@ paginate = 5
           url = "/showcase"
 ```
 
-Copy
 
 ### Test Hugo[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#test-hugo)
 
@@ -174,7 +171,6 @@ Copy
 hugo server -t themename
 ```
 
-Copy
 
 # Walking Through the Steps[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#walking-through-the-steps)
 
@@ -188,7 +184,6 @@ _NOTE: There is a MEGA SCRIPT later in this blog that will do everything in one 
 robocopy sourcepath destination path /mir
 ```
 
-Copy
 
 ### Mac/Linux[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#maclinux)
 
@@ -196,7 +191,6 @@ Copy
 rsync -av --delete "sourcepath" "destinationpath"
 ```
 
-Copy
 
 ## Add some frontmatter[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#add-some-frontmatter)
 
@@ -211,7 +205,6 @@ tags:
 ---
 ```
 
-Copy
 
 ## Transfer Images from Obsidian to Hugo[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#transfer-images-from-obsidian-to-hugo)
 
@@ -256,7 +249,6 @@ for filename in os.listdir(posts_dir):
 print("Markdown files processed and images copied successfully.")
 ```
 
-Copy
 
 ### Mac/Linux[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#maclinux-1)
 
@@ -299,7 +291,6 @@ for filename in os.listdir(posts_dir):
 print("Markdown files processed and images copied successfully.")
 ```
 
-Copy
 
 # Setup GitHub[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#setup-github)
 
@@ -314,19 +305,17 @@ Copy
 ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 ```
 
-Copy
 
 ## Push to GitHub[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#push-to-github)
 
 ```bash
 # Step 8: Push the public folder to the hostinger branch using subtree split and force push
 echo "Deploying to GitHub Hostinger..."
-git subtree split --prefix public -b hostinger-deploy
+git subtree split --prefix public -b hostinger-deploy # use hostinger to deploy
 git push origin hostinger-deploy:hostinger --force
 git branch -D hostinger-deploy
 ```
 
-Copy
 
 # The Mega Script[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#the-mega-script)
 
@@ -334,12 +323,11 @@ Copy
 
 ```powershell
 # PowerShell Script for Windows
-
 # Set variables for Obsidian to Hugo copy
 $sourcePath = "C:\Users\path\to\obsidian\posts"
 $destinationPath = "C:\Users\path\to\hugo\posts"
 
-# Set Github repo 
+# Set Github repo
 $myrepo = "reponame"
 
 # Set error handling
@@ -353,7 +341,7 @@ Set-Location $ScriptDir
 # Check for required commands
 $requiredCommands = @('git', 'hugo')
 
-# Check for Python command (python or python3)
+# Check for Python command
 if (Get-Command 'python' -ErrorAction SilentlyContinue) {
     $pythonCommand = 'python'
 } elseif (Get-Command 'python3' -ErrorAction SilentlyContinue) {
@@ -384,9 +372,8 @@ if (-not (Test-Path ".git")) {
     }
 }
 
-# Step 2: Sync posts from Obsidian to Hugo content folder using Robocopy
+# Step 2: Sync posts from Obsidian to Hugo content folder
 Write-Host "Syncing posts from Obsidian..."
-
 if (-not (Test-Path $sourcePath)) {
     Write-Error "Source path does not exist: $sourcePath"
     exit 1
@@ -400,7 +387,6 @@ if (-not (Test-Path $destinationPath)) {
 # Use Robocopy to mirror the directories
 $robocopyOptions = @('/MIR', '/Z', '/W:5', '/R:3')
 $robocopyResult = robocopy $sourcePath $destinationPath @robocopyOptions
-
 if ($LASTEXITCODE -ge 8) {
     Write-Error "Robocopy failed with exit code $LASTEXITCODE"
     exit 1
@@ -421,16 +407,7 @@ try {
     exit 1
 }
 
-# Step 4: Build the Hugo site
-Write-Host "Building the Hugo site..."
-try {
-    hugo
-} catch {
-    Write-Error "Hugo build failed."
-    exit 1
-}
-
-# Step 5: Add changes to Git
+# Step 4: Add changes to Git
 Write-Host "Staging changes for Git..."
 $hasChanges = (git status --porcelain) -ne ""
 if (-not $hasChanges) {
@@ -439,7 +416,7 @@ if (-not $hasChanges) {
     git add .
 }
 
-# Step 6: Commit changes with a dynamic message
+# Step 5: Commit changes with a dynamic message
 $commitMessage = "New Blog Post on $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 $hasStagedChanges = (git diff --cached --name-only) -ne ""
 if (-not $hasStagedChanges) {
@@ -449,101 +426,82 @@ if (-not $hasStagedChanges) {
     git commit -m "$commitMessage"
 }
 
-# Step 7: Push all changes to the main branch
-Write-Host "Deploying to GitHub Master..."
+# Step 6: Push all changes to the main branch
+Write-Host "Deploying to GitHub..."
 try {
-    git push origin master
+    git push origin main
 } catch {
-    Write-Error "Failed to push to Master branch."
+    Write-Error "Failed to push to main branch."
     exit 1
 }
 
-# Step 8: Push the public folder to the hostinger branch using subtree split and force push
-Write-Host "Deploying to GitHub Hostinger..."
+Write-Host "All done! Site synced, processed, committed, and pushed to GitHub."
+Write-Host "Cloudflare Pages will automatically deploy your site."
 
-# Check if the temporary branch exists and delete it
-$branchExists = git branch --list "hostinger-deploy"
-if ($branchExists) {
-    git branch -D hostinger-deploy
-}
-
-# Perform subtree split
-try {
-    git subtree split --prefix public -b hostinger-deploy
-} catch {
-    Write-Error "Subtree split failed."
-    exit 1
-}
-
-# Push to hostinger branch with force
-try {
-    git push origin hostinger-deploy:hostinger --force
-} catch {
-    Write-Error "Failed to push to hostinger branch."
-    git branch -D hostinger-deploy
-    exit 1
-}
-
-# Delete the temporary branch
-git branch -D hostinger-deploy
-
-Write-Host "All done! Site synced, processed, committed, built, and deployed."
 ```
 
-Copy
 
 ## Linux/Mac (BASH)[](https://blog.networkchuck.com/posts/my-insane-blog-pipeline/#linuxmac-bash)
 
+
 ```bash
 #!/bin/bash
-set -euo pipefail
-
-# Change to the script's directory
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
 
 # Set variables for Obsidian to Hugo copy
-sourcePath="/Users/path/to/obsidian/posts"
-destinationPath="/Users/path/to/hugo/posts"
+SOURCE_PATH="/Users/path/to/obsidian/posts"
+DESTINATION_PATH="/Users/path/to/hugo/posts"
 
-# Set GitHub Repo
-myrepo="reponame"
+# Set Github repo
+MYREPO="reponame"
+
+# Set error handling
+set -e
 
 # Check for required commands
-for cmd in git rsync python3 hugo; do
+for cmd in git hugo; do
     if ! command -v $cmd &> /dev/null; then
         echo "$cmd is not installed or not in PATH."
         exit 1
     fi
 done
 
+# Check for Python command
+if command -v python &> /dev/null; then
+    PYTHON_CMD="python"
+elif command -v python3 &> /dev/null; then
+    PYTHON_CMD="python3"
+else
+    echo "Python is not installed or not in PATH."
+    exit 1
+fi
+
 # Step 1: Check if Git is initialized, and initialize if necessary
 if [ ! -d ".git" ]; then
     echo "Initializing Git repository..."
     git init
-    git remote add origin $myrepo
+    git remote add origin $MYREPO
 else
     echo "Git repository already initialized."
-    if ! git remote | grep -q 'origin'; then
+    if ! git remote | grep -q "origin"; then
         echo "Adding remote origin..."
-        git remote add origin $myrepo
+        git remote add origin $MYREPO
     fi
 fi
 
-# Step 2: Sync posts from Obsidian to Hugo content folder using rsync
+# Step 2: Sync posts from Obsidian to Hugo content folder
 echo "Syncing posts from Obsidian..."
-
-if [ ! -d "$sourcePath" ]; then
-    echo "Source path does not exist: $sourcePath"
+if [ ! -d "$SOURCE_PATH" ]; then
+    echo "Source path does not exist: $SOURCE_PATH"
     exit 1
 fi
 
-if [ ! -d "$destinationPath" ]; then
-    echo "Destination path does not exist: $destinationPath"
+if [ ! -d "$DESTINATION_PATH" ]; then
+    echo "Destination path does not exist: $DESTINATION_PATH"
     exit 1
 fi
 
-rsync -av --delete "$sourcePath" "$destinationPath"
+# Use rsync to mirror the directories
+rsync -av --delete "$SOURCE_PATH/" "$DESTINATION_PATH/"
 
 # Step 3: Process Markdown files with Python script to handle image links
 echo "Processing image links in Markdown files..."
@@ -552,60 +510,30 @@ if [ ! -f "images.py" ]; then
     exit 1
 fi
 
-if ! python3 images.py; then
-    echo "Failed to process image links."
-    exit 1
-fi
+# Execute the Python script
+$PYTHON_CMD images.py
 
-# Step 4: Build the Hugo site
-echo "Building the Hugo site..."
-if ! hugo; then
-    echo "Hugo build failed."
-    exit 1
-fi
-
-# Step 5: Add changes to Git
+# Step 4: Add changes to Git
 echo "Staging changes for Git..."
-if git diff --quiet && git diff --cached --quiet; then
+if [ -z "$(git status --porcelain)" ]; then
     echo "No changes to stage."
 else
     git add .
 fi
 
-# Step 6: Commit changes with a dynamic message
-commit_message="New Blog Post on $(date +'%Y-%m-%d %H:%M:%S')"
-if git diff --cached --quiet; then
+# Step 5: Commit changes with a dynamic message
+COMMIT_MESSAGE="New Blog Post on $(date '+%Y-%m-%d %H:%M:%S')"
+if [ -z "$(git diff --cached --name-only)" ]; then
     echo "No changes to commit."
 else
     echo "Committing changes..."
-    git commit -m "$commit_message"
+    git commit -m "$COMMIT_MESSAGE"
 fi
 
-# Step 7: Push all changes to the main branch
-echo "Deploying to GitHub Main..."
-if ! git push origin main; then
-    echo "Failed to push to main branch."
-    exit 1
-fi
+# Step 6: Push all changes to the main branch
+echo "Deploying to GitHub..."
+git push origin main
 
-# Step 8: Push the public folder to the hostinger branch using subtree split and force push
-echo "Deploying to GitHub Hostinger..."
-if git branch --list | grep -q 'hostinger-deploy'; then
-    git branch -D hostinger-deploy
-fi
-
-if ! git subtree split --prefix public -b hostinger-deploy; then
-    echo "Subtree split failed."
-    exit 1
-fi
-
-if ! git push origin hostinger-deploy:hostinger --force; then
-    echo "Failed to push to hostinger branch."
-    git branch -D hostinger-deploy
-    exit 1
-fi
-
-git branch -D hostinger-deploy
-
-echo "All done! Site synced, processed, committed, built, and deployed."
+echo "All done! Site synced, processed, committed, and pushed to GitHub."
+echo "Cloudflare Pages will automatically deploy your site."
 ```

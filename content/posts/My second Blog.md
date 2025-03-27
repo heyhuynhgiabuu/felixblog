@@ -1,1 +1,0 @@
-!![Image Description](/images/CleanShot%202025-03-27%20at%2021.05.02@2x.png)

@@ -15,7 +15,7 @@ pagerSize = 5
   showMenuItems = 2
 
   # show selector to switch language
-  showLanguageSelector = false
+  showLanguageSelector = true
 
   # set theme to full screen width
   fullWidthTheme = false
@@ -30,22 +30,53 @@ pagerSize = 5
 
   # set post to show the last updated
   # If you use git, you can set `enableGitInfo` to `true` and then post will automatically get the last updated
-  showLastUpdated = false
+  showLastUpdated = true
 
   # Provide a string as a prefix for the last update date. By default, it looks like this: 2020-xx-xx [Updated: 2020-xx-xx] :: Author
-  # updatedDatePrefix = "Updated"
+  updatedDatePrefix = "Updated"
 
   # whether to show a page's estimated reading time
-  # readingTime = false # default
+  readingTime = true # default: false
 
   # whether to show a table of contents
   # can be overridden in a page's front-matter
-  # Toc = false # default
+  Toc = true # default: false
 
   # set title for the table of contents
   # can be overridden in a page's front-matter
-  # TocTitle = "Table of Contents" # default
+  TocTitle = "Table of Contents" # default: false
 
+  # Date format (according to Go Time Format)
+  dateFormat = "02-01-2006"
+  
+  # Or format with time and time zone
+  # dateFormat = "02-01-2006 15:04:05 MST"
+
+  # Currently the language selection
+  showLanguageSelector = true
+
+  # Allows custom to add to <head>
+  # customCSS = ["custom.css"]
+  # customJS = ["custom.js"]
+
+  # Allow information from Git to display update time
+  enableGitInfo = true
+
+# Syntax Highlighting configuration (Chroma)
+[markup.highlight]
+  noClasses = false
+  codeFences = true
+  guessSyntax = true
+  lineNos = true
+  lineNumbersInTable = true
+  style = "monokai"
+
+# Default set for Archetypes
+[frontmatter]
+  date = ["date", "publishDate", "lastmod"]
+  lastmod = ["lastmod", ":git", "date", "publishDate"]
+  publishDate = ["publishDate", "date"]
+  expiryDate = ["expiryDate"]
 
 [params.twitter]
   # set Twitter handles for Twitter cards
@@ -57,13 +88,13 @@ pagerSize = 5
 [languages]
   [languages.en]
     languageName = "English"
-    title = "Terminal"
+    title = "Felix's network"
 
     [languages.en.params]
       subtitle = "A simple, retro theme for Hugo"
-      owner = ""
-      keywords = ""
-      copyright = ""
+      owner = "Felix"
+      keywords = "Blog, technology, programming"
+      copyright = "© 2025 NetworkFelix"
       menuMore = "Show more"
       readMore = "Read more"
       readOtherPosts = "Read other posts"
@@ -78,13 +109,44 @@ pagerSize = 5
         logoText = "Terminal"
         logoHomeLink = "/"
 
-      [languages.en.menu]
+      # [languages.en.menu]
+        # [[languages.en.menu.main]]
+        #  identifier = "about"
+        #  name = "About"
+        #  url = "/about"
         [[languages.en.menu.main]]
-          identifier = "about"
-          name = "About"
-          url = "/about"
-        [[languages.en.menu.main]]
-          identifier = "showcase"
-          name = "Showcase"
-          url = "/showcase"
+          identifier = "blog"
+          name = "Blog"
+          url = "/posts"
+  
+    [languages.vi]
+    languageName = "Vietnamese"
+    title = "Mạng lưới của Felix"
+
+      [languages.vi.params]
+        subtitle = "Một chủ đề đơn giản, retro cho Hugo"
+        owner = "Felix"
+        keywords = "blog, công nghệ, lập trình"
+        copyright = "© 2025 NetworkFelix"
+        menuMore = "Xem thêm"
+        readMore = "Đọc tiếp"
+        readOtherPosts = "Đọc các bài viết khác"
+        newerPosts = "Bài viết mới hơn"
+        olderPosts = "Bài viết cũ hơn"
+        minuteReadingTime = "phút đọc"
+        words = "từ"
+      
+      [languages.vi.params.logo]
+        logoText = "Terminal"
+        logoHomeLink = "/"
+
+      # [languages.vi.menu]
+        # [[languages.vi.menu.main]]
+        #  identifier = "about"
+        #  name = "About"
+        #  url = "/about"
+        [[languages.vi.menu.main]]
+          identifier = "blog"
+          name = "Blog"
+          url = "/posts"
 
